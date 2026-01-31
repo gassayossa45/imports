@@ -98,8 +98,8 @@ translations = {
         "en": "🌍 Critical Raw Materials Germany – Import & Risk Dashboard"
     },
     "home_intro": {
-        "de": "Willkommen zu unserem Dashboard-Projekt über **kritische Rohstoffe**.",
-        "en": "Welcome to our dashboard project on **critical raw materials**."
+        "de": "**Willkommen zu unserem Dashboard-Projekt über kritische Rohstoffe**.",
+        "en": "**Welcome to our dashboard project on critical raw materials**."
     },
     "home_description": {
         "de": "Dieses Multi-Page-Dashboard besteht aus:",
@@ -126,8 +126,8 @@ translations = {
         "en": "- `dim_years`, `dim_countries`, `dim_products`\n- `fact_imports` (quantities, weights, values)"
     },
     "home_sidebar_hint": {
-        "de": "Nutzen Sie die Seitenleiste links, um zwischen den Dashboards zu wechseln.",
-        "en": "Use the sidebar on the left to navigate between dashboards."
+        "de": "**Nutzen Sie die Seitenleiste links, um zwischen den Dashboards zu wechseln**.",
+        "en": "**Use the sidebar on the left to navigate between dashboards**."
     },
 
     # -----------------------------------------------------

@@ -381,6 +381,20 @@ else:
     st.info(t("no_insights"))
 
 # ---------------------------------------------------------
+# CSV-Download
+# ---------------------------------------------------------
+st.subheader(t("download_title"))
+
+csv = filtered.to_csv(index=False).encode("utf-8")
+
+st.download_button(
+    label=t("download_csv"),
+    data=csv,
+    file_name="import_data_filtered.csv",
+    mime="text/csv"
+)
+
+# ---------------------------------------------------------
 # Detailtabelle
 # ---------------------------------------------------------
 st.subheader(t("detail_table"))

@@ -5,43 +5,44 @@
 import streamlit as st
 from PIL import Image
 from utils import t   # Übersetzungsfunktion
+import os
+from supabase import create_client
 
+url = os.getenv("SUPABASE_URL")
+key = os.getenv("SUPABASE_ANON_KEY")
 
-
+supabase = create_client(url, key)
 
 st.markdown("""
-<style>
+    <style>
 
-div[data-baseweb="select"] > div {
-    background-color: #1E2A5A !important;   /* dunkler Hintergrund */
-    color: white !important;                /* weiße Schrift */
-    border: 1px solid white !important;
-}
+    div[data-baseweb="select"] > div {
+        background-color: #1E2A5A !important;   /* dunkler Hintergrund */
+        color: white !important;                /* weiße Schrift */
+        border: 1px solid white !important;
+    }
 
-div[data-baseweb="select"] svg {
-    fill: white !important;                 /* weißer Pfeil */
-}
+    div[data-baseweb="select"] svg {
+        fill: white !important;                 /* weißer Pfeil */
+    }
 
-div[data-baseweb="popover"] {
-    background-color: #1E2A5A !important;   /* Dropdown-Liste dunkel */
-    color: white !important;
-}
+    div[data-baseweb="popover"] {
+        background-color: #1E2A5A !important;   /* Dropdown-Liste dunkel */
+        color: white !important;
+    }
 
-div[data-baseweb="option"] {
-    background-color: #1E2A5A !important;
-    color: white !important;
-}
+    div[data-baseweb="option"] {
+        background-color: #1E2A5A !important;
+        color: white !important;
+    }
 
-div[data-baseweb="option"]:hover {
-    background-color: #2F3B6F !important;   /* Hover-Farbe */
-    color: #FFD700 !important;              /* Gold */
-}
+    div[data-baseweb="option"]:hover {
+        background-color: #2F3B6F !important;   /* Hover-Farbe */
+        color: #FFD700 !important;              /* Gold */
+    }
 
-</style>
+    </style>
 """, unsafe_allow_html=True)
-
-
-
 
 
 #Sprache Dropdown
@@ -76,7 +77,7 @@ st.markdown("""
 # Page Config
 # ---------------------------------------------------------
 st.set_page_config(
-    page_title="Kritische Rohstoffe Deutschland – Import & Dashboard",
+    page_title= t("home_title"),
     layout="wide"
 )
 

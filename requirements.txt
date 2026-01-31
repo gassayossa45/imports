@@ -1,7 +1,10 @@
 streamlit
 supabase
-supabase-py
 pandas
+numpy
+Pillow
+requests
+python-dotenv
+psycopg2-binary
 plotly
 pycountry
-Pillow
