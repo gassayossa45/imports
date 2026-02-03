@@ -16,6 +16,16 @@ from utils import t   # Übersetzungsfunktion
 import pycountry
 
 st.markdown("""
+    <style>
+        .sidebar-divider {
+            height: 2px;
+            background-color: #cccccc;
+            margin: 15px 0;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
 <style>
 
 div[data-baseweb="select"] > div {
@@ -48,6 +58,22 @@ div[data-baseweb="option"]:hover {
 
 st.session_state["presentation_mode"] = False
 
+#Sidebar trennen
+st.sidebar.markdown('<div class="sidebar-divider"></div>', unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# Sidebar: Logout
+# ---------------------------------------------------------
+with st.sidebar:
+    #st.header(t("nav_header"))
+    st.success(f"{t('logged_in_as')} {st.session_state['username']}")
+
+    if st.button(t("logout")):
+        st.session_state.clear()
+        st.switch_page("pages/login.py")
+
+#Sidebar trennen
+st.sidebar.markdown('<div class="sidebar-divider"></div>', unsafe_allow_html=True)
 
 #Sprache Dropdown
 with st.sidebar:
@@ -146,6 +172,9 @@ def load_data():
 st.title(t("analysis_title"))
 
 df = load_data()
+
+#Sidebar trennen
+st.sidebar.markdown('<div class="sidebar-divider"></div>', unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # Sidebar Filter (zweisprachig)
@@ -256,42 +285,53 @@ st.markdown("---")
 # ---------------------------------------------------------
 # Charts: Importwert nach Ländern
 # ---------------------------------------------------------
-colA, colB = st.columns(2)
+st.subheader(t("chart_value_by_country"))
 
-with colA:
-    st.subheader(t("chart_value_by_country"))
-
-    if not filtered.empty:
-        by_country = filtered.groupby("country_name", as_index=False)["price"].sum()
-        fig_country = px.bar(
-            by_country,
-            x="country_name",
-            y="price",
-            labels={"country_name": "", "price": "USD"}
-        )
-        st.plotly_chart(fig_country, use_container_width=True)
-    else:
-        st.info(t("no_data"))
+if not filtered.empty:
+    by_country = filtered.groupby("country_name", as_index=False)["price"].sum()
+    fig_country = px.bar(
+        by_country,
+        x="country_name",
+        y="price",
+        labels={"country_name": "", "price": "USD"}
+    )
+    st.plotly_chart(fig_country, use_container_width=True)
+else:
+    st.info(t("no_data"))
 
 # ---------------------------------------------------------
 # Charts: Importwert nach Produkten
 # ---------------------------------------------------------
-with colB:
-    st.subheader(t("chart_value_by_product"))
 
-    if not filtered.empty:
-        by_product = filtered.groupby("product_name", as_index=False)["price"].sum()
-        fig_product = px.bar(
-            by_product,
-            x="product_name",
-            y="price",
-            labels={"product_name": "", "price": "USD"}
-        )
-        fig_product.update_xaxes(tickangle=45)
-        st.plotly_chart(fig_product, use_container_width=True)
-    else:
-        st.info(t("no_data"))
+product_colors = {
+    "Graphite": "#1f77b4",
+    "Alkali": "#ff7f0e",
+    "Copper": "#2ca02c",
+    "Nickel": "#d62728",
+    "Aluminium": "#9467bd",
+    "Cobalt": "#8c564b",
+    "Manganese": "#e377c2"
+}
 
+st.subheader(t("chart_value_by_product"))
+
+if not filtered.empty:
+    by_product = filtered.groupby("product_name", as_index=False)["price"].sum()
+
+    fig_product = px.bar(
+        by_product,
+        x="product_name",
+        y="price",
+        color="product_name",
+        color_discrete_map=product_colors,
+        labels={"product_name": "", "price": "USD"}
+    )
+
+    fig_product.update_xaxes(tickangle=45)
+    st.plotly_chart(fig_product, use_container_width=True)
+
+else:
+    st.info(t("no_data"))
 # ---------------------------------------------------------
 # Zeitreihe: Importwert pro Jahr
 # ---------------------------------------------------------
@@ -316,7 +356,7 @@ else:
 st.subheader(t("chart_ppk_per_year"))
 
 ppk_year = (
-    df.groupby("year")
+    filtered.groupby("year")
     .apply(lambda x: x["price"].sum() / x["netweight"].sum() if x["netweight"].sum() > 0 else None)
     .reset_index(name="price_per_kg")
 )
@@ -336,7 +376,7 @@ st.plotly_chart(fig_ppk, use_container_width=True)
 # ---------------------------------------------------------
 st.subheader(t("chart_yoy"))
 
-yoy_df = df.groupby("year", as_index=False)["price"].sum()
+yoy_df = filtered.groupby("year", as_index=False)["price"].sum()
 yoy_df["prev"] = yoy_df["price"].shift(1)
 yoy_df["yoy_pct"] = (yoy_df["price"] - yoy_df["prev"]) / yoy_df["prev"] * 100
 
@@ -381,16 +421,7 @@ st.subheader(t("detail_table"))
 
 st.dataframe(filtered.sort_values(["year", "country_name", "product_name"]))
 
-# ---------------------------------------------------------
-# Sidebar: Logout
-# ---------------------------------------------------------
-with st.sidebar:
-    st.header(t("nav_header"))
-    st.success(f"{t('logged_in_as')} {st.session_state['username']}")
 
-    if st.button(t("logout")):
-        st.session_state.clear()
-        st.switch_page("pages/login.py")
 
 st.markdown("""
 <style>

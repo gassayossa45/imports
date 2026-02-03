@@ -94,8 +94,8 @@ translations = {
     # Startseite
     # -----------------------------------------------------
     "home_title": {
-        "de": "🌍 Kritische Rohstoffe Deutschland – Import & Risiko Dashboard",
-        "en": "🌍 Critical Raw Materials Germany – Import & Risk Dashboard"
+        "de": "🌍 Kritische Batterie-Rohstoffe Import",
+        "en": "🌍 Critical Battery Raw Materials Import"
     },
     "home_intro": {
         "de": "**Willkommen zu unserem Dashboard-Projekt über kritische Rohstoffe**.",
@@ -106,24 +106,24 @@ translations = {
         "en": "This multi-page dashboard consists of:"
     },
     "home_point_analysis": {
-        "de": "1. **Analyse** – Deskriptive Analyse der Importe (Werte, Mengen, Preis pro kg, Zeitreihen, Heatmap).",
-        "en": "1. **Analysis** – Descriptive analysis of imports (values, quantities, price per kg, time series, heatmap)."
+        "de": "1. **Analyse** – Deskriptive Analyse der Importe (Werte, Mengen, Preis pro kg, Zeitreihen).",
+        "en": "1. **Analysis** – Descriptive analysis of imports (values, quantities, price per kg, time series)."
     },
     "home_point_risk": {
-        "de": "2. **Risikoanalyse** – Konzentrationsrisiken, Abhängigkeiten, China-Exposure, HHI-Trends.",
-        "en": "2. **Risk analysis** – Concentration risks, dependencies, China exposure, HHI trends."
+        "de": "2. **Risikoanalyse** – Abhängigkeiten, Konzentrationsrisiken, HHI je Land und Produkt, HHI-Trends.",
+        "en": "2. **Risk analysis** – Dependencies, concentration risks, HHI by Country and Product, HHI trends."
     },
     "home_point_summary": {
         "de": "3. **Summary** – Top-5 Länder je Produkt, Top-5 Produkte je Jahr, automatische Insights.",
         "en": "3. **Summary** – Top‑5 countries per product, Top‑5 products per year, automatic insights."
     },
     "home_data_basis": {
-        "de": "Die Daten basieren auf einem **Star-Schema** in PostgreSQL mit:",
-        "en": "The data is based on a **star schema** in PostgreSQL with:"
+        "de": "Die Daten basieren auf einem **Star-Schema** in PostgreSQL oder Supabase mit:",
+        "en": "The data is based on a **star schema** in PostgreSQL or Supabase with:"
     },
     "home_data_tables": {
-        "de": "- `dim_years`, `dim_countries`, `dim_products`\n- `fact_imports` (Mengen, Gewichte, Werte)",
-        "en": "- `dim_years`, `dim_countries`, `dim_products`\n- `fact_imports` (quantities, weights, values)"
+        "de": "- `users`\n- `dim_years`, `dim_countries`, `dim_products`\n- `fact_imports` (Mengen, Gewichte, Werte)",
+        "en": "- `users`\n- `dim_years`, `dim_countries`, `dim_products`\n- `fact_imports` (quantities, weights, values)"
     },
     "home_sidebar_hint": {
         "de": "**Nutzen Sie die Seitenleiste links, um zwischen den Dashboards zu wechseln**.",

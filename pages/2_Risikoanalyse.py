@@ -10,6 +10,17 @@ from utils import t   # Übersetzungsfunktion
 import pycountry
 
 st.markdown("""
+    <style>
+        .sidebar-divider {
+            height: 2px;
+            background-color: #cccccc;
+            margin: 15px 0;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+
+st.markdown("""
 <style>
 
 div[data-baseweb="select"] > div {
@@ -40,8 +51,6 @@ div[data-baseweb="option"]:hover {
 </style>
 """, unsafe_allow_html=True)
 
-import streamlit as st
-from utils import t
 
 st.markdown("""
 <style>
@@ -54,6 +63,24 @@ st.markdown("""
 
 
 st.session_state["presentation_mode"] = False
+
+#Sidebar trennen
+st.sidebar.markdown('<div class="sidebar-divider"></div>', unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# Sidebar: Logout
+# ---------------------------------------------------------
+with st.sidebar:
+    #st.header(t("nav_header"))
+    st.success(f"{t('logged_in_as')} {st.session_state['username']}")
+
+    if st.button(t("logout")):
+        st.session_state.clear()
+        st.switch_page("pages/login.py")
+
+#Sidebar trennen
+st.sidebar.markdown('<div class="sidebar-divider"></div>', unsafe_allow_html=True)
+
 
 
 #Sprache Dropdown
@@ -153,6 +180,9 @@ def load_data():
 st.title(t("risk_title"))
 
 df = load_data()
+
+#Sidebar trennen
+st.sidebar.markdown('<div class="sidebar-divider"></div>', unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # Sidebar Filter (zweisprachig)
@@ -315,16 +345,7 @@ st.download_button(
 st.subheader(t("detail_table"))
 st.dataframe(filtered.sort_values(["year", "country_name", "product_name"]))
 
-# ---------------------------------------------------------
-# Sidebar Logout
-# ---------------------------------------------------------
-with st.sidebar:
-    st.header(t("nav_header"))
-    st.success(f"{t('logged_in_as')} {st.session_state['username']}")
 
-    if st.button(t("logout")):
-        st.session_state.clear()
-        st.switch_page("pages/login.py")
 
 st.markdown("""
 <style>

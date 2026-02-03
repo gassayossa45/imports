@@ -10,6 +10,16 @@ from utils import t   # Übersetzungsfunktion
 
 
 st.markdown("""
+    <style>
+        .sidebar-divider {
+            height: 2px;
+            background-color: #cccccc;
+            margin: 15px 0;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
 <style>
     /* Alle Präsentationsseiten aus der Sidebar entfernen */
     section[data-testid="stSidebarNav"] li a[href*="presentation_"] {
@@ -53,6 +63,24 @@ div[data-baseweb="option"]:hover {
 
 st.session_state["presentation_mode"] = False
 
+#Sidebar trennen
+st.sidebar.markdown('<div class="sidebar-divider"></div>', unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# Sidebar: Logout
+# ---------------------------------------------------------
+with st.sidebar:
+    #st.header(t("nav_header"))
+    st.success(f"{t('logged_in_as')} {st.session_state['username']}")
+
+    if st.button(t("logout")):
+        st.session_state.clear()
+        st.switch_page("pages/login.py")
+
+#Sidebar trennen
+st.sidebar.markdown('<div class="sidebar-divider"></div>', unsafe_allow_html=True)
+
+
 #Sprache Dropdown
 with st.sidebar:
     st.markdown("<h3 style='color:white;'>🌐 Sprache / Language</h3>", unsafe_allow_html=True)
@@ -79,6 +107,8 @@ if "logged_in" not in st.session_state or not st.session_state["logged_in"]:
     st.warning(t("login_required"))
     st.switch_page("login.py")
     st.stop()
+
+
 
 # ---------------------------------------------------------
 # Styling (unverändert)
@@ -145,6 +175,10 @@ def load_data():
 st.title(t("summary_title"))
 
 df = load_data()
+
+#Sidebar trennen
+st.sidebar.markdown('<div class="sidebar-divider"></div>', unsafe_allow_html=True)
+
 
 # ---------------------------------------------------------
 # Filter
@@ -319,7 +353,13 @@ if not top5_products.empty:
         color="product_name",
         facet_col="year"
     )
-    fig_top_products.update_xaxes(tickangle=45)
+    #fig_top_products.update_xaxes(tickangle=45)
+    #fig_top_products.update_xaxes(tickangle=45, automargin=True)
+    #fig_top_products.update_xaxes(title_standoff=20)
+    # Entfernt das störende "product_name" unter jeder Facette
+    fig_top_products.for_each_xaxis(lambda axis: axis.update(title_text="", showticklabels=False))
+
+    #fig_top_products.update_xaxes(showticklabels=False)
     st.plotly_chart(fig_top_products, use_container_width=True)
 else:
     st.info(t("no_top5_products"))
@@ -400,16 +440,7 @@ st.download_button(
 st.subheader(t("detail_table"))
 st.dataframe(filtered.sort_values(["year", "country_name", "product_name"]))
 
-# ---------------------------------------------------------
-# Sidebar Logout
-# ---------------------------------------------------------
-with st.sidebar:
-    st.header(t("nav_header"))
-    st.success(f"{t('logged_in_as')} {st.session_state['username']}")
 
-    if st.button(t("logout")):
-        st.session_state.clear()
-        st.switch_page("pages/login.py")
 
 st.markdown("""
 <style>
