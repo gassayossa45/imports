@@ -105,7 +105,7 @@ with st.sidebar:
 # ---------------------------------------------------------
 if "logged_in" not in st.session_state or not st.session_state["logged_in"]:
     st.warning(t("login_required"))
-    st.switch_page("login.py")
+    st.switch_page("pages/login.py")
     st.stop()
 
 
@@ -208,7 +208,7 @@ filtered = df[
 # Neue Summary-Kennzahlen + HHI + Risiko-Ampel
 # ---------------------------------------------------------
 
-st.subheader(t("summary_overview_title"))
+#st.subheader(t("summary_overview_title"))
 
 if filtered.empty:
     st.info(t("summary_no_data"))
@@ -235,70 +235,6 @@ else:
     # Anzahl Produkte
     num_products = filtered["product_name"].nunique()
 
-    # -----------------------------
-    # Kennzahlen (zweisprachig)
-    # -----------------------------
-    col1, col2, col3, col4 = st.columns(4)
-
-    col1.metric(
-        label=t("summary_hhi_label"),
-        value=f"{hhi_total:.3f}",
-        help=t("summary_hhi_help")
-    )
-
-    col2.metric(
-        label=t("summary_diversity_label"),
-        value=f"{diversity:.3f}",
-        help=t("summary_diversity_help")
-    )
-
-    col3.metric(
-        label=t("summary_countries_label"),
-        value=num_countries,
-        help=t("summary_countries_help")
-    )
-
-    col4.metric(
-        label=t("summary_products_label"),
-        value=num_products,
-        help=t("summary_products_help")
-    )
-
-    # -----------------------------
-    # Risiko-Ampel
-    # -----------------------------
-    if hhi_total < 0.30:
-        risk_level = t("risk_low")
-        color = "#2ecc71"  # green
-    elif hhi_total < 0.50:
-        risk_level = t("risk_medium")
-        color = "#f1c40f"  # yellow
-    else:
-        risk_level = t("risk_high")
-        color = "#e74c3c"  # red
-
-    st.markdown(
-        f"""
-        <div style='padding:15px; background-color:{color}; color:white; border-radius:8px; margin-top:20px;'>
-            <h3 style='margin:0;'>{t("summary_risk_title")}: {risk_level}</h3>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # -----------------------------
-    # Narrative Interpretation
-    # -----------------------------
-    st.markdown("### " + t("summary_interpretation_title"))
-
-    summary_text = t("summary_interpretation").format(
-        hhi=f"{hhi_total:.3f}",
-        diversity=f"{diversity:.3f}",
-        countries=num_countries,
-        products=num_products
-    )
-
-    st.write(summary_text)
 
 # ---------------------------------------------------------
 # Top 5 Länder je Produkt

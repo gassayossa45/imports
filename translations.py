@@ -94,8 +94,8 @@ translations = {
     # Startseite
     # -----------------------------------------------------
     "home_title": {
-        "de": "🌍 Kritische Batterie-Rohstoffe Import",
-        "en": "🌍 Critical Battery Raw Materials Import"
+        "de": "🌍 Analyse der Importe kritischer Rohstoffe in Deutschland: Entwicklung einer datengetriebenen ETL- und Dashboard-Plattform",
+        "en": "🌍 Analysis of Germany's Imports of Critical Raw Materials: Development of a Data-Driven ETL and Dashboard Platform"
     },
     "home_intro": {
         "de": "**Willkommen zu unserem Dashboard-Projekt über kritische Rohstoffe**.",
@@ -110,8 +110,8 @@ translations = {
         "en": "1. **Analysis** – Descriptive analysis of imports (values, quantities, price per kg, time series)."
     },
     "home_point_risk": {
-        "de": "2. **Risikoanalyse** – Abhängigkeiten, Konzentrationsrisiken, HHI je Land und Produkt, HHI-Trends.",
-        "en": "2. **Risk analysis** – Dependencies, concentration risks, HHI by Country and Product, HHI trends."
+        "de": "2. **Risikoanalyse** – Diversität, Abhängigkeiten, Konzentrationsrisiken, HHI je Land und Produkt, HHI-Trends.",
+        "en": "2. **Risk analysis** – Diversity, Dependencies, concentration risks, HHI by Country and Product, HHI trends."
     },
     "home_point_summary": {
         "de": "3. **Summary** – Top-5 Länder je Produkt, Top-5 Produkte je Jahr, automatische Insights.",

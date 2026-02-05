@@ -4,6 +4,14 @@ from utils import t
 if "lang" not in st.session_state:
     st.session_state["lang"] = "de"
 
+# ---------------------------------------------------------
+# Zugriffsschutz
+# ---------------------------------------------------------
+if "logged_in" not in st.session_state or not st.session_state["logged_in"]:
+    st.warning(t("login_required"))
+    st.switch_page("pages/login.py")
+    st.stop()
+
 # Sidebar komplett ausblenden
 st.markdown("""
 <style>

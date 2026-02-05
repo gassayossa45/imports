@@ -107,7 +107,7 @@ with st.sidebar:
 # ---------------------------------------------------------
 if "logged_in" not in st.session_state or not st.session_state["logged_in"]:
     st.warning(t("login_required"))
-    st.switch_page("login.py")
+    st.switch_page("pages/login.py")
     st.stop()
 
 # ---------------------------------------------------------
@@ -206,6 +206,105 @@ filtered = df[
     df["country_name"].isin(countries) &
     df["product_name"].isin(products)
 ]
+
+# ---------------------------------------------------------
+# Neue Summary-Kennzahlen + HHI + Risiko-Ampel
+# ---------------------------------------------------------
+
+st.subheader(t("summary_overview_title"))
+
+if filtered.empty:
+    st.info(t("summary_no_data"))
+else:
+    # -----------------------------
+    # HHI-Berechnung
+    # -----------------------------
+    grouped = filtered.groupby(["product_name", "country_name"])["price"].sum().reset_index()
+    grouped["share"] = grouped.groupby("product_name")["price"].transform(lambda x: x / x.sum())
+    grouped["hhi_share"] = grouped["share"] ** 2
+
+    # HHI pro Produkt
+    hhi_product = grouped.groupby("product_name")["hhi_share"].sum().reset_index()
+
+    # Gesamt-HHI (Durchschnitt)
+    hhi_total = hhi_product["hhi_share"].mean()
+
+    # Diversität
+    diversity = 1 - hhi_total
+
+    # Anzahl Länder
+    num_countries = filtered["country_name"].nunique()
+
+    # Anzahl Produkte
+    num_products = filtered["product_name"].nunique()
+
+    # -----------------------------
+    # Kennzahlen (zweisprachig)
+    # -----------------------------
+    col1, col2, col3, col4 = st.columns(4)
+
+    col1.metric(
+        label=t("summary_hhi_label"),
+        value=f"{hhi_total:.3f}",
+        help=t("summary_hhi_help")
+    )
+
+    col2.metric(
+        label=t("summary_diversity_label"),
+        value=f"{diversity:.3f}",
+        help=t("summary_diversity_help")
+    )
+
+    col3.metric(
+        label=t("summary_countries_label"),
+        value=num_countries,
+        help=t("summary_countries_help")
+    )
+
+    col4.metric(
+        label=t("summary_products_label"),
+        value=num_products,
+        help=t("summary_products_help")
+    )
+
+    # -----------------------------
+    # Risiko-Ampel
+    # -----------------------------
+    if hhi_total < 0.30:
+        risk_level = t("risk_low")
+        color = "#2ecc71"  # green
+    elif hhi_total < 0.50:
+        risk_level = t("risk_medium")
+        color = "#f1c40f"  # yellow
+    else:
+        risk_level = t("risk_high")
+        color = "#e74c3c"  # red
+
+    st.markdown(
+        f"""
+        <div style='padding:15px; background-color:{color}; color:white; border-radius:8px; margin-top:20px;'>
+            <h3 style='margin:0;'>{t("summary_risk_title")}: {risk_level}</h3>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # -----------------------------
+    # Narrative Interpretation
+    # -----------------------------
+    st.markdown("### " + t("summary_interpretation_title"))
+
+    summary_text = t("summary_interpretation").format(
+        hhi=f"{hhi_total:.3f}",
+        diversity=f"{diversity:.3f}",
+        countries=num_countries,
+        products=num_products
+    )
+
+    st.write(summary_text)
+
+
+
 # Risiko – Choropleth Map
 st.subheader (t("risk_map_title"))
 
@@ -240,7 +339,15 @@ if not filtered.empty:
         margin=dict(l=0, r=0, t=50, b=0),
         coloraxis_colorbar=dict(title=t("dependency"))
     )
-
+    fig_map.update_layout(
+    hoverlabel=dict(
+        font_size=16,
+        font_family="Arial",
+        bgcolor="black",
+        font_color="white",
+        bordercolor="#1E3A5F"
+    )
+    )
     st.plotly_chart(fig_map, use_container_width=True)
 
 else:
@@ -307,6 +414,17 @@ else:
         labels={"color": "HHI-Anteil"},
         title="HHI-Heatmap je Produkt und Land"
     )
+    fig.update_layout(
+    hoverlabel=dict(
+        font_size=16,
+        font_family="Arial",
+        bgcolor="black",
+        font_color="white",
+        bordercolor="#1E3A5F"
+    )
+)
+
+
     st.plotly_chart(fig, use_container_width=True)
 
 # ---------------------------------------------------------
@@ -315,13 +433,26 @@ else:
 st.subheader(t("hhi_trend_title"))
 
 trend = (
-    df.groupby(["year", "country_name"])["price"].sum()
+    filtered.groupby(["year", "country_name"])["price"].sum()
     .groupby(level=0)
     .apply(lambda x: ((x / x.sum()) ** 2).sum())
     .reset_index(name="hhi")
 )
 
 fig_trend = px.line(trend, x="year", y="hhi", markers=True)
+
+# Tooltip lesbarer machen
+fig_trend.update_layout(
+    hoverlabel=dict(
+        font_size=16,
+        font_family="Arial",
+        bgcolor="black",
+        font_color="white",
+        bordercolor="#1E3A5F"
+    )
+)
+
+
 st.plotly_chart(fig_trend, use_container_width=True)
 
 # ---------------------------------------------------------

@@ -13,6 +13,13 @@ from supabase import create_client
 
 #supabase = create_client(url, key)
 
+for key, default in {
+    "username": "",
+    "logged_in": False,
+    "language": "de"
+}.items():
+    if key not in st.session_state:
+        st.session_state[key] = default
 
 st.markdown("""
     <style>

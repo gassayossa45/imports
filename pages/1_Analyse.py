@@ -99,7 +99,7 @@ with st.sidebar:
 # ---------------------------------------------------------
 if "logged_in" not in st.session_state or not st.session_state["logged_in"]:
     st.warning(t("login_required"))
-    st.switch_page("login.py")
+    st.switch_page("pages/login.py")
     st.stop()
 
 # ---------------------------------------------------------
@@ -380,14 +380,24 @@ yoy_df = filtered.groupby("year", as_index=False)["price"].sum()
 yoy_df["prev"] = yoy_df["price"].shift(1)
 yoy_df["yoy_pct"] = (yoy_df["price"] - yoy_df["prev"]) / yoy_df["prev"] * 100
 
+# Automatische Farben pro Jahr
+year_colors = {
+    year: px.colors.qualitative.Plotly[i % len(px.colors.qualitative.Plotly)]
+    for i, year in enumerate(sorted(yoy_df["year"].unique()))
+}
+
 fig_yoy = px.bar(
     yoy_df,
     x="year",
     y="yoy_pct",
+    color="year",
+    color_discrete_map=year_colors,
     labels={"year": "", "yoy_pct": "%"}
 )
 
 st.plotly_chart(fig_yoy, use_container_width=True)
+
+
 
 # ---------------------------------------------------------
 # 1_Analyse.py 
