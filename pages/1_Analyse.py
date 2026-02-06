@@ -15,6 +15,16 @@ import plotly.express as px
 from utils import t   # Übersetzungsfunktion
 import pycountry
 
+
+
+# ---------------------------------------------------------
+# Page Config
+# ---------------------------------------------------------
+st.set_page_config(
+    page_title= t("home_title"),
+    layout="wide"
+)
+
 st.markdown("""
     <style>
         .sidebar-divider {

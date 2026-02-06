@@ -8,6 +8,13 @@ import psycopg2
 import plotly.express as px
 from utils import t   # Übersetzungsfunktion
 
+# ---------------------------------------------------------
+# Page Config
+# ---------------------------------------------------------
+st.set_page_config(
+    page_title= t("home_title"),
+    layout="wide"
+)
 
 st.markdown("""
     <style>
@@ -204,36 +211,10 @@ filtered = df[
     df["product_name"].isin(products) &
     df["country_name"].isin(countries)
 ]
-# ---------------------------------------------------------
-# Neue Summary-Kennzahlen + HHI + Risiko-Ampel
-# ---------------------------------------------------------
 
 #st.subheader(t("summary_overview_title"))
 
-if filtered.empty:
-    st.info(t("summary_no_data"))
-else:
-    # -----------------------------
-    # HHI-Berechnung
-    # -----------------------------
-    grouped = filtered.groupby(["product_name", "country_name"])["price"].sum().reset_index()
-    grouped["share"] = grouped.groupby("product_name")["price"].transform(lambda x: x / x.sum())
-    grouped["hhi_share"] = grouped["share"] ** 2
 
-    # HHI pro Produkt
-    hhi_product = grouped.groupby("product_name")["hhi_share"].sum().reset_index()
-
-    # Gesamt-HHI (Durchschnitt)
-    hhi_total = hhi_product["hhi_share"].mean()
-
-    # Diversität
-    diversity = 1 - hhi_total
-
-    # Anzahl Länder
-    num_countries = filtered["country_name"].nunique()
-
-    # Anzahl Produkte
-    num_products = filtered["product_name"].nunique()
 
 
 # ---------------------------------------------------------
@@ -289,10 +270,7 @@ if not top5_products.empty:
         color="product_name",
         facet_col="year"
     )
-    #fig_top_products.update_xaxes(tickangle=45)
-    #fig_top_products.update_xaxes(tickangle=45, automargin=True)
-    #fig_top_products.update_xaxes(title_standoff=20)
-    # Entfernt das störende "product_name" unter jeder Facette
+    
     fig_top_products.for_each_xaxis(lambda axis: axis.update(title_text="", showticklabels=False))
 
     #fig_top_products.update_xaxes(showticklabels=False)
@@ -337,7 +315,7 @@ if len(dom_land) > 0 and share_land > 50:
 
 # Trend
 trend = (
-    df.groupby("year")["price"]
+    filtered.groupby("year")["price"]
     .sum()
     .pct_change()
     .iloc[-1]

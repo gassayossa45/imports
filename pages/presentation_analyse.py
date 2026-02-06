@@ -1,6 +1,14 @@
 import streamlit as st
 from utils import t
 
+# ---------------------------------------------------------
+# Page Config
+# ---------------------------------------------------------
+st.set_page_config(
+    page_title= t("home_title"),
+    layout="wide"
+)
+
 if "lang" not in st.session_state:
     st.session_state["lang"] = "de"
 
